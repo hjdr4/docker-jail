@@ -1,0 +1,4 @@
+#!/bin/bash
+HOME=/home/$USERNAME
+adduser --home $HOME --disabled-password --gecos "" --force-badname --uid $UID $USERNAME &>/dev/null
+cd $HOME && exec gosu $USERNAME /bin/bash "$@"

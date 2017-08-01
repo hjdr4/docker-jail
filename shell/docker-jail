@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [ -t 1 ]; then TTY="-t"; else TTY="" ;fi
+
+function k {
+  docker kill $id &> /dev/null
+}
+
+trap k SIGTERM SIGINT SIGHUP
+
+id=$(docker run --rm --net host -i $TTY -d -e "UID=`id -u`" \
+  -e "USERNAME=`whoami`" -e "DISPLAY=$DISPLAY"  \
+   -v /home/$USERNAME:/home/$USERNAME docker-jail "$@" )
+
+docker attach $id
+
+k &> /dev/null
